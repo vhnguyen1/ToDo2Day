@@ -91,4 +91,34 @@ class DBHelper extends SQLiteOpenHelper {
         db.close();
         return allTasks;
     }
+
+    public void updateTask(Task existingTask) {
+        // 1.) Create a reference to our database
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // 2.) Make a key-value pair for each value you want to insert
+        ContentValues values = new ContentValues();
+        // Key is name of column, value is the data for the object
+        //values.put(KEY_FIELD_ID, existingTask.getId()); <-- Database assigns an id
+        values.put(FIELD_DESCRIPTION, existingTask.getDescription());
+        values.put(FIELD_IS_DONE, existingTask.getIsDone());
+
+        // 3.) Update the value from the database
+        db.update(DATABASE_TABLE,
+                values,
+                KEY_FIELD_ID + "=?", // Restrict it to update only 1 (the specified id) in the database
+                                     // Setting it to null would update ALL
+                new String[] {String.valueOf(existingTask.getId())});
+
+        // 4.) Close the database after finished
+        db.close();
+    }
+
+    public void deleteAllTasks() {
+        // 1.) Create a reference to our database
+        SQLiteDatabase db = this.getWritableDatabase();
+        // To delete all, enter null
+        db.delete(DATABASE_TABLE, null, null);
+        db.close();
+    }
 }

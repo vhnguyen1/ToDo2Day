@@ -54,7 +54,12 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
         // Fill the checkbox with text and update the status to checked/not checked
         mIsDoneCheckBox = (CheckBox) view.findViewById(R.id.isDoneCheckBox);
         mIsDoneCheckBox.setText(selectedTask.getDescription());
-        mIsDoneCheckBox.setChecked(selectedTask.getIsDone() == 1 ? true : false);
+        mIsDoneCheckBox.setChecked((selectedTask.getIsDone() == 1)? true : false);
+
+        // Associate each CheckBox with a specific Task
+        // Every view has a property called "Tag"
+        // Tag is a locker for one object (each view can store one object)
+        mIsDoneCheckBox.setTag(selectedTask);
 
         return view;
     }
