@@ -2,37 +2,47 @@ package edu.orangecoastcollege.cs273.vnguyen629.todo2day;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.widget.EditText;
+import android.widget.ListView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    private DBHelper database;
+    private List<Task> taskList;
+    private TaskListAdapter taskListAdapter; // custom ListAdapter
+
+    private EditText taskEditText;
+    private ListView taskListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // FOR NOW (TEMPORARY), delete the old database THEN create the new
-        this.deleteDatabase(DBHelper.DATABASE_TABLE);
+        // FOR NOW (TEMPORARY), delete the old database THEN create the new since there will be a
+        // database that will permanently exist even after closing project/program
+        // Unreliable/inefficient method
+        //this.deleteDatabase(DBHelper.DATABASE_TABLE);
 
         // Make a DBHelper reference
-        DBHelper db = new DBHelper(this);
+        database = new DBHelper(this);
 
-        // Makes a new task and permanently adds it to the database
-        // The tasks will exist even after the program is closed
-        // Rerunning with adding the same tasks (same ID as before will cause problems)
-        // Thus a temporary measure to avoid this is to delete the database before adding (as done above)
-        db.addTask(new Task(1, "Study for CS273 Midterm", 0));
-        db.addTask(new Task(2, "Play League of Legends", 0));
-        db.addTask(new Task(3, "Register for research symposium", 0));
-        db.addTask(new Task(4, "Learn doubly-linked lists", 0));
-        db.addTask(new Task(5, "Master the FragmentManager", 0));
+        // Add a dummy task
+        //database.addTask(new Task("Dummy Task", 1));
 
-        // Get all the tasks from the database and print them with Log.i()
-        ArrayList<Task> allTasks = db.getAllTasks();
-        // Loop through each task, print to Log.i()
-        for (Task singleTask : allTasks)
-            Log.i("DATABASE TASK", singleTask.toString());
+        // Fill the list with Tasks from the database
+        taskList = database.getAllTasks();
+
+        // Let's create our custom list adapter
+        // Associate the adapter with the context (this), layout, and the list.
+        taskListAdapter = new TaskListAdapter(this, R.layout.task_item, taskList);
+
+        // Connect the ListView with our layout
+        taskListView = (ListView) findViewById(R.id.taskListView);
+
+        // Associate the adapter with the ListView
+        taskListView.setAdapter(taskListAdapter);
     }
 }

@@ -17,12 +17,10 @@ class DBHelper extends SQLiteOpenHelper {
     static final String DATABASE_TABLE = "Tasks";
     private static final int DATABASE_VERSION = 1;
 
-
     //TASK 2: DEFINE THE FIELDS (COLUMN NAMES) FOR THE TABLE
     private static final String KEY_FIELD_ID = "id";
     private static final String FIELD_DESCRIPTION = "description";
     private static final String FIELD_IS_DONE = "is_done";
-
 
     public DBHelper (Context context){
         super (context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -31,7 +29,7 @@ class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate (SQLiteDatabase database){
         String table = "CREATE TABLE " + DATABASE_TABLE + "("
-                + KEY_FIELD_ID + " INTEGER PRIMARY KEY, "
+                + KEY_FIELD_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + FIELD_DESCRIPTION + " TEXT, "
                 + FIELD_IS_DONE + " INTEGER" + ")";
         database.execSQL (table);
@@ -54,7 +52,7 @@ class DBHelper extends SQLiteOpenHelper {
         // 2.) Make a key-value pair for each value you want to insert
         ContentValues values = new ContentValues();
         // Key is name of column, value is the data for the object
-        values.put(KEY_FIELD_ID, newTask.getId());
+       //values.put(KEY_FIELD_ID, newTask.getId()); <-- Database assigns an id
         values.put(FIELD_DESCRIPTION, newTask.getDescription());
         values.put(FIELD_IS_DONE, newTask.getIsDone());
 
@@ -91,7 +89,6 @@ class DBHelper extends SQLiteOpenHelper {
 
         // 5.) Close the database after finished
         db.close();
-
         return allTasks;
     }
 }
